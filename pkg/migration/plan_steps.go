@@ -126,6 +126,7 @@ func AddManualExecution(s *Step) {
 		}
 	case StepTypeDelete:
 		for _, r := range s.Delete.Resources {
+			s.ManualExecution = append(s.ManualExecution, fmt.Sprintf("kubectl patch %s %s -p '{"metadata":{"finalizers":[]}}' --type=merge", strings.Join([]string{r.Kind, r.Group}, "."), r.Name))
 			s.ManualExecution = append(s.ManualExecution, fmt.Sprintf("kubectl delete %s %s", strings.Join([]string{r.Kind, r.Group}, "."), r.Name))
 		}
 	}
